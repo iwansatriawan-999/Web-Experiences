@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA LUXE - High-End Luxury UI Converter Engine</title>
+
+    <!-- Google Fonts: Cinzel, Cormorant Garamond, and Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        obsidian: {
+                            950: '#050507',
+                            900: '#0A0A0F',
+                            850: '#101017',
+                            800: '#161622',
+                            700: '#222232',
+                        },
+                        gold: {
+                            100: '#FFF8E7',
+                            300: '#F5E2B3',
+                            400: '#E6C875',
+                            500: '#D4AF37', // Classic Muted Gold
+                            600: '#B88E28',
+                            700: '#8C6718',
+                        },
+                        champagne: '#F7E7CE',
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        cormorant: ['Cormorant Garamond', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'gold-glow': '0 0 25px rgba(212, 175, 55, 0.25)',
+                        'gold-glow-lg': '0 0 40px rgba(212, 175, 55, 0.35)',
+                        'obsidian-card': '0 20px 50px rgba(0, 0, 0, 0.85)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222232;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        /* Luxury Gradient Typography */
+        .text-gold-gradient {
+            background: linear-gradient(135deg, #FFF5D6 0%, #E6C875 30%, #D4AF37 70%, #997A20 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-silver-gradient {
+            background: linear-gradient(135deg, #FFFFFF 0%, #D1D5DB 50%, #9CA3AF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Glassmorphism Luxury Panels */
+        .glass-panel {
+            background: rgba(16, 16, 23, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.18);
+        }
+
+        .glass-panel-gold {
+            background: rgba(22, 22, 34, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 248, 231, 0.1);
+        }
+
+        /* Gold Shimmer Button Animation */
+        .btn-gold-shimmer {
+            background: linear-gradient(135deg, #D4AF37 0%, #F5E2B3 50%, #B88E28 100%);
+            background-size: 200% auto;
+            color: #08080C;
+            font-weight: 700;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+        .btn-gold-shimmer:hover {
+            background-position: right center;
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Golden Border Gradient Pulse */
+        .gold-border-glow {
+            position: relative;
+        }
+        .gold-border-glow::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.6), rgba(255, 255, 255, 0.1), rgba(212, 175, 55, 0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        /* Ambient Background Glows */
+        .ambient-glow-1 {
+            position: fixed;
+            top: -10%;
+            left: 20%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .ambient-glow-2 {
+            position: fixed;
+            bottom: -10%;
+            right: 15%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(184, 142, 40, 0.06) 0%, rgba(0, 0, 0, 0) 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Line numbers styling for editor */
+        .code-textarea {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            tab-size: 2;
+        }
+    </style>
+</head>
+<body class="bg-obsidian-950 text-gray-200 font-sans antialiased min-h-screen pb-28 selection:bg-gold-500 selection:text-obsidian-950">
+
+    <!-- Ambient Ambient Lighting -->
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+
+    <header class="sticky top-0 z-40 border-b border-gold-500/20 bg-obsidian-950/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-gold-400 via-gold-500 to-gold-700 p-[1px] shadow-gold-glow flex items-center justify-center">
+                    <div class="w-full h-full bg-obsidian-900 rounded-[11px] flex items-center justify-center">
+                        <i class="bi bi-gem text-gold-400 text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-cinzel text-2xl font-black tracking-widest text-gold-gradient">AURA LUXE</h1>
+                        <span class="text-[10px] tracking-widest font-mono bg-gold-500/10 text-gold-400 border border-gold-500/30 px-2 py-0.5 rounded-full uppercase font-semibold">PRO v2.4</span>
+                    </div>
+                    <p class="text-xs text-gray-400 font-light tracking-wide hidden sm:block">Luxury UI Transformer & Code Engine</p>
+                </div>
+            </div>
+
+            <!-- Top Header Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="loadPreset('pricing')" class="hidden md:flex items-center gap-2 text-xs text-gold-300 bg-obsidian-850 hover:bg-gold-500/10 border border-gold-500/30 px-3 py-2 rounded-lg transition">
+                    <i class="bi bi-magic text-gold-400"></i>
+                    <span>Quick Preset</span>
+                </button>
+                <button onclick="openSettingsModal()" class="w-10 h-10 rounded-lg bg-obsidian-850 hover:bg-obsidian-800 border border-gold-500/20 text-gray-300 hover:text-gold-400 flex items-center justify-center transition" title="Theme Settings">
+                    <i class="bi bi-sliders text-lg"></i>
+                </button>
+                <a href="#editor-section" class="btn-gold-shimmer px-4 py-2 text-xs rounded-lg uppercase tracking-wider flex items-center gap-2">
+                    <i class="bi bi-play-fill text-base"></i>
+                    <span>Start Engine</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8 relative z-10">
+
+        <!-- Banner / Hero Statement -->
+        <section class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden gold-border-glow">
+            <div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-gold-500/10 to-transparent pointer-events-none hidden lg:block"></div>
+            <div class="max-w-2xl">
+                <span class="text-xs uppercase tracking-widest font-cinzel text-gold-400 font-semibold mb-2 block flex items-center gap-2">
+                    <i class="bi bi-stars"></i> Intelligent Luxury Transformation
+                </span>
+                <h2 class="font-cinzel text-2xl sm:text-4xl font-bold text-white tracking-wide leading-tight mb-3">
+                    Elevate Plain Code into <span class="text-gold-gradient">Opulent Web Experiences</span>
+                </h2>
+                <p class="text-gray-400 text-sm leading-relaxed mb-6 font-light">
+                    Paste raw HTML, component skeletons, or upload template files. AURA LUXE automatically injects glassmorphic aesthetics, deep obsidian shades, shimmering gold accents, and tailored typography.
+                </p>
+                <div class="flex flex-wrap items-center gap-4 text-xs text-gray-400">
+                    <div class="flex items-center gap-1.5"><i class="bi bi-check-circle-fill text-gold-400"></i> 100% Mobile Responsive</div>
+                    <div class="flex items-center gap-1.5"><i class="bi bi-check-circle-fill text-gold-400"></i> Glassmorphism Ready</div>
+                    <div class="flex items-center gap-1.5"><i class="bi bi-check-circle-fill text-gold-400"></i> Clean Exportable Code</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Grid Interface: Editor on Left, Preview/Output on Right -->
+        <section id="editor-section" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <!-- LEFT COLUMN: Input & Engine Controls (Col 5) -->
+            <div class="lg:col-span-5 space-y-6">
+
+                <!-- Input Box Panel -->
+                <div class="glass-panel rounded-2xl p-5 space-y-4">
+                    <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
+                        <div class="flex items-center gap-2">
+                            <i class="bi bi-code-square text-gold-400 text-lg"></i>
+                            <h3 class="font-cinzel text-sm font-semibold text-white tracking-wider">Raw HTML Source</h3>
+                        </div>
+                        <button onclick="clearEditor()" class="text-xs text-gray-400 hover:text-red-400 transition flex items-center gap-1">
+                            <i class="bi bi-trash"></i> Clear
+                        </button>
+                    </div>
+
+                    <!-- Preset Selector Pills -->
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-medium text-gray-400 uppercase tracking-widest block">Quick Sample Presets:</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="loadPreset('pricing')" class="preset-btn text-xs bg-obsidian-800 hover:bg-gold-500/20 text-gray-300 hover:text-gold-300 border border-gold-500/20 px-3 py-1.5 rounded-lg transition">
+                                VIP Pricing
+                            </button>
+                            <button onclick="loadPreset('profile')" class="preset-btn text-xs bg-obsidian-800 hover:bg-gold-500/20 text-gray-300 hover:text-gold-300 border border-gold-500/20 px-3 py-1.5 rounded-lg transition">
+                                Executive Profile
+                            </button>
+                            <button onclick="loadPreset('form')" class="preset-btn text-xs bg-obsidian-800 hover:bg-gold-500/20 text-gray-300 hover:text-gold-300 border border-gold-500/20 px-3 py-1.5 rounded-lg transition">
+                                Private Form
+                            </button>
+                            <button onclick="loadPreset('header')" class="preset-btn text-xs bg-obsidian-800 hover:bg-gold-500/20 text-gray-300 hover:text-gold-300 border border-gold-500/20 px-3 py-1.5 rounded-lg transition">
+                                Luxe Header
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Drag & Drop / File Input Dropzone -->
+                    <div id="dropzone" class="border-2 border-dashed border-gold-500/30 hover:border-gold-400 bg-obsidian-900/50 hover:bg-gold-500/5 rounded-xl p-4 text-center cursor-pointer transition space-y-1">
+                        <input type="file" id="fileInput" accept=".html,.txt" class="hidden" onchange="handleFileSelect(event)">
+                        <i class="bi bi-cloud-arrow-up text-gold-400 text-2xl block"></i>
+                        <p class="text-xs text-gray-300 font-medium">Drag & drop HTML file here or <span class="text-gold-400 underline">Browse</span></p>
+                        <p class="text-[10px] text-gray-500">Supports .html and .txt files</p>
+                    </div>
+
+                    <!-- Code Textarea -->
+                    <div class="relative">
+                        <textarea id="rawInput" class="code-textarea w-full h-80 bg-obsidian-900 text-gold-100 border border-gold-500/20 rounded-xl p-4 text-xs focus:outline-none focus:border-gold-400/80 transition resize-none leading-relaxed" placeholder="<!-- Paste your raw HTML code here... -->&#10;<div class='card'>&#10;  <h2>Exclusive Luxury Villa</h2>&#10;  <p>Reserve your private residence in Bali.</p>&#10;  <button>Inquire VIP</button>&#10;</div>"></textarea>
+                    </div>
+
+                    <!-- Transform Action Button -->
+                    <button id="transformBtn" onclick="convertCode()" class="w-full btn-gold-shimmer py-3.5 rounded-xl font-cinzel text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-3">
+                        <i class="bi bi-stars text-lg"></i>
+                        <span>Transform To Luxury UI</span>
+                    </button>
+                </div>
+
+                <!-- Features Highlight List -->
+                <div class="glass-panel rounded-2xl p-5 space-y-3">
+                    <h4 class="font-cinzel text-xs font-bold text-gold-400 uppercase tracking-widest">Active Engine Rules</h4>
+                    <ul class="text-xs text-gray-400 space-y-2">
+                        <li class="flex items-center gap-2"><i class="bi bi-shield-check text-gold-500"></i> Auto Dark Obsidian & Gold Color Mapping</li>
+                        <li class="flex items-center gap-2"><i class="bi bi-layers text-gold-500"></i> Glassmorphism Backdrop Blur Wrappers</li>
+                        <li class="flex items-center gap-2"><i class="bi bi-fonts text-gold-500"></i> Cinzel & Plus Jakarta Typography Styling</li>
+                        <li class="flex items-center gap-2"><i class="bi bi-phone text-gold-500"></i> Flexible Responsive Grid Auto-Fit</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Interactive Dual-Mode Workspace (Col 7) -->
+            <div class="lg:col-span-7 space-y-4">
+
+                <!-- Workspace Header & View Mode Switcher -->
+                <div class="glass-panel rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+
+                    <!-- Tab Switchers: Live Preview vs Code -->
+                    <div class="flex items-center bg-obsidian-900 rounded-lg p-1 border border-gold-500/20">
+                        <button id="tabPreviewBtn" onclick="switchTab('preview')" class="px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition flex items-center gap-2 bg-gold-500 text-obsidian-950">
+                            <i class="bi bi-eye-fill"></i>
+                            <span>Live Preview</span>
+                        </button>
+                        <button id="tabCodeBtn" onclick="switchTab('code')" class="px-4 py-2 rounded-md text-xs font-semibold tracking-wide text-gray-400 hover:text-white transition flex items-center gap-2">
+                            <i class="bi bi-code-slash"></i>
+                            <span>Converted Code</span>
+                        </button>
+                    </div>
+
+                    <!-- Screen Viewport Switcher (Visible on Live Preview Tab) -->
+                    <div id="viewportControls" class="flex items-center gap-1 bg-obsidian-900 p-1 rounded-lg border border-gold-500/20">
+                        <button onclick="setViewport('100%')" title="Desktop View" class="vp-btn px-2.5 py-1.5 rounded text-xs text-gold-400 hover:bg-gold-500/10 transition">
+                            <i class="bi bi-display"></i>
+                        </button>
+                        <button onclick="setViewport('768px')" title="Tablet View" class="vp-btn px-2.5 py-1.5 rounded text-xs text-gray-400 hover:text-gold-400 hover:bg-gold-500/10 transition">
+                            <i class="bi bi-tablet"></i>
+                        </button>
+                        <button onclick="setViewport('375px')" title="Mobile View" class="vp-btn px-2.5 py-1.5 rounded text-xs text-gray-400 hover:text-gold-400 hover:bg-gold-500/10 transition">
+                            <i class="bi bi-phone"></i>
+                        </button>
+                    </div>
+
+                    <!-- Quick Code Export Actions (Copy & Download) -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="copyGeneratedCode()" class="px-3 py-1.5 bg-obsidian-850 hover:bg-gold-500/20 border border-gold-500/30 text-gold-300 text-xs rounded-lg transition flex items-center gap-1.5">
+                            <i class="bi bi-clipboard text-gold-400"></i>
+                            <span class="hidden sm:inline">Copy</span>
+                        </button>
+                        <button onclick="downloadHTMLFile()" class="px-3 py-1.5 bg-gold-500 hover:bg-gold-400 text-obsidian-950 font-bold text-xs rounded-lg transition flex items-center gap-1.5">
+                            <i class="bi bi-download"></i>
+                            <span class="hidden sm:inline">Download</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab 1: Live Interactive Preview Canvas -->
+                <div id="tabPreview" class="glass-panel rounded-2xl p-4 min-h-[580px] flex flex-col items-center justify-center relative overflow-hidden">
+                    <div id="previewContainer" class="w-full h-[540px] transition-all duration-300 mx-auto rounded-xl overflow-hidden shadow-2xl border border-gold-500/20 bg-obsidian-950">
+                        <iframe id="previewIframe" class="w-full h-full border-none" title="Luxury Preview Engine"></iframe>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Generated Code Output Box -->
+                <div id="tabCode" class="glass-panel rounded-2xl p-4 min-h-[580px] hidden">
+                    <div class="flex items-center justify-between mb-3 border-b border-gold-500/20 pb-2">
+                        <span class="text-xs font-mono text-gold-400 flex items-center gap-2">
+                            <i class="bi bi-file-earmark-code"></i> luxury_design.html
+                        </span>
+                        <span class="text-[10px] text-gray-400 font-mono">HTML5 + Tailwind CSS + Custom Gold Theme</span>
+                    </div>
+                    <pre class="w-full h-[500px] overflow-auto bg-obsidian-900 border border-gold-500/20 rounded-xl p-4 text-xs font-mono text-gold-100 leading-relaxed"><code id="outputCode">/* Click "Transform to Luxury UI" to generate complete code */</code></pre>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Sticky Floating Bottom Navigation Bar -->
+    <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 glass-panel-gold rounded-full px-6 py-3 shadow-obsidian-card border border-gold-500/40 flex items-center gap-6">
+        <button onclick="scrollToEditor()" class="flex flex-col items-center gap-0.5 text-gold-400 hover:text-gold-300 transition">
+            <i class="bi bi-code-slash text-lg"></i>
+            <span class="text-[9px] uppercase tracking-wider font-semibold">Editor</span>
+        </button>
+        <button onclick="loadRandomPreset()" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gold-400 transition">
+            <i class="bi bi-grid-1x2 text-lg"></i>
+            <span class="text-[9px] uppercase tracking-wider font-semibold">Presets</span>
+        </button>
+        <button onclick="triggerMainConvert()" class="w-12 h-12 -mt-6 rounded-full bg-gradient-to-r from-gold-400 to-gold-600 text-obsidian-950 font-bold flex items-center justify-center shadow-gold-glow-lg hover:scale-110 transition">
+            <i class="bi bi-arrow-repeat text-xl font-bold"></i>
+        </button>
+        <button onclick="switchTab('preview'); scrollToEditor();" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gold-400 transition">
+            <i class="bi bi-eye text-lg"></i>
+            <span class="text-[9px] uppercase tracking-wider font-semibold">Preview</span>
+        </button>
+        <button onclick="downloadHTMLFile()" class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gold-400 transition">
+            <i class="bi bi-download text-lg"></i>
+            <span class="text-[9px] uppercase tracking-wider font-semibold">Export</span>
+        </button>
+    </nav>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-panel-gold rounded-2xl max-w-md w-full p-6 space-y-6 border border-gold-500/40 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-gold-500/20 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-gold-gradient flex items-center gap-2">
+                    <i class="bi bi-sliders"></i> Luxury Theme Engine Settings
+                </h3>
+                <button onclick="closeSettingsModal()" class="text-gray-400 hover:text-white text-xl">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="text-gray-300 font-semibold mb-2 block uppercase tracking-wider">Primary Accent Theme</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="setThemeAccent('gold')" class="p-3 rounded-xl border border-gold-500/50 bg-gold-500/10 text-gold-300 font-bold text-center hover:bg-gold-500/20">
+                            Imperial Gold
+                        </button>
+                        <button onclick="setThemeAccent('emerald')" class="p-3 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 font-bold text-center hover:bg-emerald-500/20">
+                            Emerald Lux
+                        </button>
+                        <button onclick="setThemeAccent('platinum')" class="p-3 rounded-xl border border-slate-400/30 bg-slate-400/10 text-slate-200 font-bold text-center hover:bg-slate-400/20">
+                            Platinum Silver
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-gray-300 font-semibold mb-2 block uppercase tracking-wider">Typography Accent</label>
+                    <select id="fontSelect" class="w-full bg-obsidian-900 border border-gold-500/30 rounded-lg p-2 text-gray-200 focus:outline-none">
+                        <option value="Cinzel">Cinzel (Royal Display)</option>
+                        <option value="Cormorant Garamond">Cormorant Garamond (Classic Elegant)</option>
+                        <option value="Plus Jakarta Sans">Plus Jakarta Sans (Modern Clean)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="text-gray-300 font-semibold mb-2 block uppercase tracking-wider">Glassmorphism Intensity</label>
+                    <input type="range" min="5" max="30" value="16" id="blurRange" class="w-full accent-gold-500">
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button onclick="closeSettingsModal()" class="w-full btn-gold-shimmer py-2.5 rounded-xl uppercase text-xs font-bold tracking-wider">
+                    Apply Preferences
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Overlay -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <script>
+        // Preset HTML Code Samples
+        const presets = {
+            pricing: `<div class="pricing-card">
+  <span class="badge">Elegance Club</span>
+  <h2>Imperial Membership</h2>
+  <p class="subtitle">Access to luxury concierge and private estates worldwide.</p>
+  <div class="price-box">
+    <span class="currency">$</span>
+    <span class="amount">2,500</span>
+    <span class="period">/ month</span>
+  </div>
+  <ul class="features">
+    <li>24/7 Dedicated Concierge Service</li>
+    <li>Private Jet Charter Priority Booking</li>
+    <li>Exclusive Access to Members-Only Lounges</li>
+    <li>Complimentary Suite Upgrades Globally</li>
+  </ul>
+  <button class="btn">Apply For Access</button>
+</div>`,
+
+            profile: `<div class="profile-card">
+  <div class="avatar-box">
+    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300" alt="Avatar">
+  </div>
+  <div class="profile-info">
+    <h2>Lady Victoria Vance</h2>
+    <p class="role">Chief Investment Partner</p>
+    <div class="stats-grid">
+      <div class="stat">
+        <span class="val">$12.4M</span>
+        <span class="lbl">Portfolio</span>
+      </div>
+      <div class="stat">
+        <span class="val">48</span>
+        <span class="lbl">Ventures</span>
+      </div>
+      <div class="stat">
+        <span class="val">VIP</span>
+        <span class="lbl">Tier</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn-primary">Schedule Meeting</button>
+      <button class="btn-secondary">View Dossier</button>
+    </div>
+  </div>
+</div>`,
+
+            form: `<div class="contact-card">
+  <h2>Private Consultation</h2>
+  <p class="description">Submit your details to request an exclusive private viewing.</p>
+  <form class="luxury-form">
+    <div class="field-group">
+      <label>Full Name</label>
+      <input type="text" placeholder="Lord / Lady Full Name">
+    </div>
+    <div class="field-group">
+      <label>Private Email</label>
+      <input type="email" placeholder="vip@domain.com">
+    </div>
+    <div class="field-group">
+      <label>Preferred Date</label>
+      <input type="date">
+    </div>
+    <div class="field-group">
+      <label>Special Requests</label>
+      <textarea placeholder="Specify vehicle preferences or security details..."></textarea>
+    </div>
+    <button type="button" class="submit-btn">Request Invitation</button>
+  </form>
+</div>`,
+
+            header: `<header class="luxury-header">
+  <div class="brand">
+    <h1>AURA ESTATE</h1>
+    <p>Luxury Residences & Private Islands</p>
+  </div>
+  <nav class="nav-links">
+    <a href="#">Residences</a>
+    <a href="#">Yachts</a>
+    <a href="#">Private Jets</a>
+    <a href="#">Sanctuaries</a>
+  </nav>
+  <div class="header-actions">
+    <button class="contact-btn">Client Portal</button>
+  </div>
+</header>`
+        };
+
+        // Active State Variables
+        let currentTheme = 'gold';
+
+        // Initialize Application
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPreset('pricing');
+            setupDragAndDrop();
+        });
+
+        // Load Preset into Textarea
+        function loadPreset(key) {
+            if (presets[key]) {
+                document.getElementById('rawInput').value = presets[key];
+                showToast('Preset loaded successfully!', 'info');
+                convertCode();
+            }
+        }
+
+        function loadRandomPreset() {
+            const keys = Object.keys(presets);
+            const randomKey = keys[Math.floor(Math.random() * keys.length)];
+            loadPreset(randomKey);
+        }
+
+        // Clear Editor Content
+        function clearEditor() {
+            document.getElementById('rawInput').value = '';
+            showToast('Editor cleared', 'info');
+        }
+
+        // File Drag & Drop Handler
+        function setupDragAndDrop() {
+            const dropzone = document.getElementById('dropzone');
+            
+            dropzone.addEventListener('click', () => {
+                document.getElementById('fileInput').click();
+            });
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('bg-gold-500/20', 'border-gold-400');
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('bg-gold-500/20', 'border-gold-400');
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('bg-gold-500/20', 'border-gold-400');
+                if (e.dataTransfer.files.length > 0) {
+                    processFile(e.dataTransfer.files[0]);
+                }
+            });
+        }
+
+        function handleFileSelect(event) {
+            if (event.target.files.length > 0) {
+                processFile(event.target.files[0]);
+            }
+        }
+
+        function processFile(file) {
+            if (!file.name.endsWith('.html') && !file.name.endsWith('.txt')) {
+                showToast('Please upload an HTML or TXT file.', 'error');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('rawInput').value = e.target.result;
+                showToast(`Loaded ${file.name}`, 'success');
+                convertCode();
+            };
+            reader.readAsText(file);
+        }
+
+        // Switch Workspace Tab (Preview vs Code Output)
+        function switchTab(tab) {
+            const previewTab = document.getElementById('tabPreview');
+            const codeTab = document.getElementById('tabCode');
+            const tabPreviewBtn = document.getElementById('tabPreviewBtn');
+            const tabCodeBtn = document.getElementById('tabCodeBtn');
+            const viewportControls = document.getElementById('viewportControls');
+
+            if (tab === 'preview') {
+                previewTab.classList.remove('hidden');
+                codeTab.classList.add('hidden');
+                viewportControls.classList.remove('hidden');
+
+                tabPreviewBtn.className = "px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition flex items-center gap-2 bg-gold-500 text-obsidian-950 shadow-gold-glow";
+                tabCodeBtn.className = "px-4 py-2 rounded-md text-xs font-semibold tracking-wide text-gray-400 hover:text-white transition flex items-center gap-2";
+            } else {
+                previewTab.classList.add('hidden');
+                codeTab.classList.remove('hidden');
+                viewportControls.classList.add('hidden');
+
+                tabCodeBtn.className = "px-4 py-2 rounded-md text-xs font-semibold tracking-wide transition flex items-center gap-2 bg-gold-500 text-obsidian-950 shadow-gold-glow";
+                tabPreviewBtn.className = "px-4 py-2 rounded-md text-xs font-semibold tracking-wide text-gray-400 hover:text-white transition flex items-center gap-2";
+            }
+        }
+
+        // Viewport Resizer Emulation
+        function setViewport(width) {
+            const container = document.getElementById('previewContainer');
+            container.style.width = width;
+            
+            // Highlight active viewport button
+            document.querySelectorAll('.vp-btn').forEach(btn => {
+                btn.classList.remove('text-gold-400');
+                btn.classList.add('text-gray-400');
+            });
+            event.currentTarget.classList.remove('text-gray-400');
+            event.currentTarget.classList.add('text-gold-400');
+
+            showToast(`Viewport set to ${width}`, 'info');
+        }
+
+        // Trigger Convert from Floating Nav
+        function triggerMainConvert() {
+            scrollToEditor();
+            convertCode();
+        }
+
+        function scrollToEditor() {
+            document.getElementById('editor-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Conversion Engine Transformer Core
+        function convertCode() {
+            const rawHtml = document.getElementById('rawInput').value.trim();
+            if (!rawHtml) {
+                showToast('Please enter or upload HTML code first!', 'error');
+                return;
+            }
+
+            // Build full luxury styled document output
+            const fullLuxuryDoc = generateLuxuryWrapper(rawHtml);
+
+            // Render in Iframe
+            const iframe = document.getElementById('previewIframe');
+            iframe.srcdoc = fullLuxuryDoc;
+
+            // Update Code Output Display
+            document.getElementById('outputCode').textContent = fullLuxuryDoc;
+
+            showToast('Transformation Complete! Luxury UI Rendered.', 'success');
+        }
+
+        // Generate Full HTML Document with Luxury Aesthetics
+        function generateLuxuryWrapper(rawContent) {
+            return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luxury UI Export - AURA LUXE</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"><\/script>
+
+  <style>
+    body {
+      background-color: #08080c;
+      color: #f3f4f6;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(184, 142, 40, 0.06) 0%, transparent 40%);
+    }
+
+    /* Luxury Auto-Styling Rules for Raw Tags */
+    h1, h2, h3, h4, .title {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 0.05em;
+      background: linear-gradient(135deg, #FFF8E7 0%, #E6C875 40%, #D4AF37 70%, #997A20 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    /* Container Glass Card Enhancement */
+    div, section, article {
+      transition: all 0.3s ease;
+    }
+
+    /* Direct styling for common container cards */
+    .pricing-card, .profile-card, .contact-card, .header-widget, .card, form {
+      background: rgba(18, 18, 26, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 1.25rem;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      max-width: 100%;
+    }
+
+    /* Gold Button Enhancements */
+    button, .btn, .submit-btn, .btn-primary {
+      background: linear-gradient(135deg, #D4AF37 0%, #F5E2B3 50%, #B88E28 100%);
+      color: #08080c !important;
+      font-weight: 700;
+      font-family: 'Cinzel', serif;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.85rem 1.75rem;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-align: center;
+    }
+
+    button:hover, .btn:hover, .submit-btn:hover, .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 30px rgba(212, 175, 55, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #D4AF37 !important;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      box-shadow: none;
+    }
+    .btn-secondary:hover {
+      background: rgba(212, 175, 55, 0.15);
+    }
+
+    /* Inputs Styling */
+    input, textarea, select {
+      width: 100%;
+      background: rgba(10, 10, 15, 0.8);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      color: #f3f4f6;
+      padding: 0.75rem 1rem;
+      border-radius: 0.6rem;
+      margin-top: 0.35rem;
+      margin-bottom: 1rem;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+    input:focus, textarea:focus {
+      border-color: #D4AF37;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #D4AF37;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+    }
+
+    /* Price Displays */
+    .price-box {
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: baseline;
+      gap: 0.25rem;
+    }
+    .price-box .amount {
+      font-family: 'Cinzel', serif;
+      font-size: 2.75rem;
+      font-weight: 900;
+      color: #FFF8E7;
+    }
+    .price-box .currency, .price-box .period {
+      color: #D4AF37;
+    }
+
+    /* Features List */
+    ul.features {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+    }
+    ul.features li {
+      padding: 0.5rem 0;
+      color: #d1d5db;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    ul.features li::before {
+      content: "✦";
+      color: #D4AF37;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .stat .val {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #D4AF37;
+    }
+    .stat .lbl {
+      font-size: 0.7rem;
+      color: #9ca3af;
+      text-transform: uppercase;
+    }
+
+    /* Avatar styling */
+    .avatar-box img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid #D4AF37;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Converted Content Canvas Container -->
+  <div class="luxury-wrapper w-full max-w-xl mx-auto">
+    ${rawContent}
+  </div>
+
+</body>
+</html>`;
+        }
+
+        // Copy Code to Clipboard
+        function copyGeneratedCode() {
+            const codeText = document.getElementById('outputCode').textContent;
+            if (!codeText || codeText.startsWith('/* Click')) {
+                showToast('No converted code available to copy!', 'error');
+                return;
+            }
+
+            // Executive clipboard copy logic
+            const tempArea = document.createElement('textarea');
+            tempArea.value = codeText;
+            document.body.appendChild(tempArea);
+            tempArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempArea);
+
+            showToast('Code copied to clipboard!', 'success');
+        }
+
+        // Download HTML File
+        function downloadHTMLFile() {
+            const codeText = document.getElementById('outputCode').textContent;
+            if (!codeText || codeText.startsWith('/* Click')) {
+                showToast('No converted code available to download!', 'error');
+                return;
+            }
+
+            const blob = new Blob([codeText], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'aura_luxe_design.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('Downloaded luxury_design.html', 'success');
+        }
+
+        // Settings Modal Controls
+        function openSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeSettingsModal() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function setThemeAccent(accent) {
+            currentTheme = accent;
+            showToast(`Theme changed to ${accent.toUpperCase()}`, 'info');
+            convertCode();
+        }
+
+        // Custom Toast Notification System
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            let iconClass = 'bi-info-circle-fill text-gold-400';
+            if (type === 'success') iconClass = 'bi-check-circle-fill text-emerald-400';
+            if (type === 'error') iconClass = 'bi-exclamation-triangle-fill text-red-400';
+
+            toast.className = 'glass-panel-gold rounded-xl px-4 py-3 border border-gold-500/30 text-xs font-semibold text-white shadow-2xl flex items-center gap-3 transition-all duration-300 transform translate-y-2 opacity-0 pointer-events-auto';
+            toast.innerHTML = `<i class="bi ${iconClass} text-base"></i> <span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            // Dismiss
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>
